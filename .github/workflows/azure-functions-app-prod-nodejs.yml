@@ -63,4 +63,4 @@ jobs:
       with:
         app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
         package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
-        creds: ${{ secrets.YOUR_SECRET_NAME }} # Remove publish-profile to use Azure RBAC
+        publish-profile: ${{ secrets.YOUR_SECRET_NAME }} # Remove publish-profile to use Azure RBAC
