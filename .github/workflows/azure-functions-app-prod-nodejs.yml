@@ -1,4 +1,4 @@
-# This workflow will build a Node.js project and deploy it to an Azure Functions App on Windows or Linux when a commit is pushed to your default branch.
+s# This workflow will build a Node.js project and deploy it to an Azure Functions App on Windows or Linux when a commit is pushed to your default branch.
 #
 # This workflow assumes you have already created the target Azure Functions app.
 # For instructions see:
@@ -58,9 +58,9 @@ jobs:
         popd
 
     - name: 'Run Azure Functions Action'
-      uses: Azure/functions-action@v1
+      uses: Azure/login@v1
       id: fa
       with:
         app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
         package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
-        publish-profile: ${{ secrets.YOUR_SECRET_NAME }} # Remove publish-profile to use Azure RBAC
+        creds: ${{ secrets.YOUR_SECRET_NAME }} # Remove publish-profile to use Azure RBAC
