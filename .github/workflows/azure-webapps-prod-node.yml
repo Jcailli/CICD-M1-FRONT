@@ -19,20 +19,17 @@
 
 on:
   push:
-    branches: [ "master" ]
-  workflow_dispatch:
-
-env:
-  NODE_VERSION: '20.x'                # set this to the node version to use
-
-permissions:
-  contents: read
+    branches: 
+      - master
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
+      with:
+        submodules: true
+        lfs: false
 
     - name: 'Deploy to Azure WebApp'
       id: deploy-to-static-webapp
