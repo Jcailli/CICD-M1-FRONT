@@ -25,7 +25,7 @@ jobs:
       run: npm run build
 
     - name: Verify build output
-      run: ls -la build
+      run: ls -la dist
 
     - name: 'Deploy to Azure WebApp'
       id: deploy-to-static-webapp
@@ -35,4 +35,4 @@ jobs:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
         action: "upload"
         app_location: "/"
-        output_location: "build"
+        output_location: "dist"
