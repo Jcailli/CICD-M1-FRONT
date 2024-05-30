@@ -1,16 +1,28 @@
 on:
   push:
-    branches: 
-      - release
+    branches: [ "release" ]
+  workflow_dispatch:
+
+env:
+  NODE_VERSION: '20.x'
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
       with:
-        submodules: true
-        lfs: false
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Build project
+      run: npm run build
 
     - name: 'Deploy to Azure WebApp'
       uses: azure/static-web-apps-deploy@v1
@@ -19,3 +31,4 @@ jobs:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
         action: "upload"
         app_location: "/"
+        output_location: "build"
