@@ -25,8 +25,28 @@ jobs:
     - name: Build project
       run: npm run build
 
+    - name: Add web.config for Azure Web App
+      run: |
+        echo "<?xml version=\"1.0\" encoding=\"utf-8\"?>\
+        <configuration>\
+          <system.webServer>\
+            <rewrite>\
+              <rules>\
+                <rule name=\"SPA Routes\" stopProcessing=\"true\">\
+                  <match url=\".*\" />\
+                  <conditions logicalGrouping=\"MatchAll\">\
+                    <add input=\"{REQUEST_FILENAME}\" matchType=\"IsFile\" negate=\"true\" />\
+                    <add input=\"{REQUEST_FILENAME}\" matchType=\"IsDirectory\" negate=\"true\" />\
+                  </conditions>\
+                  <action type=\"Rewrite\" url=\"/\" />\
+                </rule>\
+              </rules>\
+            </rewrite>\
+          </system.webServer>\
+        </configuration>" > dist/web.config
+
     - name: Zip build folder
-      run: zip -r build.zip dist/*
+      run: zip -r build.zip dist
 
     - name: 'Deploy to Azure WebApp'
       uses: Azure/webapps-deploy@v1
