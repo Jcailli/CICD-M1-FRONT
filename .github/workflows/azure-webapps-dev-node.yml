@@ -4,6 +4,7 @@ on:
   workflow_dispatch:
 
 env:
+  APP_NAME: cicd-m1-jcail-front-dev
   NODE_VERSION: '20.x'
 
 jobs:
@@ -24,14 +25,12 @@ jobs:
     - name: Build project
       run: npm run build
 
-    - name: Verify build output
-      run: ls -la dist
+    - name: Zip build folder
+      run: zip -r build.zip dist
 
     - name: 'Deploy to Azure WebApp'
-      uses: Azure/static-web-apps-deploy@v1
+      uses: Azure/webapps-deploy@v1
       with:
+        app-name: ${{ env.APP_NAME }}
+        package: build.zip
         azure_static_web_apps_api_token: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_DEV }}
-        repo_token: ${{ secrets.GITHUB_TOKEN }}
-        action: "upload"
-        app_location: "/"
-        output_location: "dist"
