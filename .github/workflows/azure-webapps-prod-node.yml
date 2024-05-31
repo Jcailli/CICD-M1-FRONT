@@ -46,7 +46,7 @@ jobs:
         </configuration>" > dist/web.config
 
     - name: Zip build folder
-      run: zip -r build.zip dist
+      run: cd dist && zip -r ../build.zip ./*
 
     - name: 'Deploy to Azure WebApp'
       uses: Azure/webapps-deploy@v1
