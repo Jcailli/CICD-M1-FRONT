@@ -1,6 +1,6 @@
 import axios from "axios"
 
-const BASE_URL = 'http://localhost:8080/v1/employee/'
+const BASE_URL = 'https://cicd-m1-jcail-back-dev.azurewebsites.net/v1/employee/'
 
 export const getAllEmployees = () => {
     return axios.get(BASE_URL)
