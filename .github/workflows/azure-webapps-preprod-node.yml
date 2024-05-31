@@ -4,6 +4,7 @@ on:
   workflow_dispatch:
 
 env:
+  APP_NAME: cicd-m1-jcail-front-preprod
   NODE_VERSION: '20.x'
 
 jobs:
@@ -24,14 +25,32 @@ jobs:
     - name: Build project
       run: npm run build
 
-    - name: Verify build output
-      run: ls -la dist
+    - name: Add web.config for Azure Web App
+      run: |
+        echo "<?xml version=\"1.0\" encoding=\"utf-8\"?>\
+        <configuration>\
+          <system.webServer>\
+            <rewrite>\
+              <rules>\
+                <rule name=\"SPA Routes\" stopProcessing=\"true\">\
+                  <match url=\".*\" />\
+                  <conditions logicalGrouping=\"MatchAll\">\
+                    <add input=\"{REQUEST_FILENAME}\" matchType=\"IsFile\" negate=\"true\" />\
+                    <add input=\"{REQUEST_FILENAME}\" matchType=\"IsDirectory\" negate=\"true\" />\
+                  </conditions>\
+                  <action type=\"Rewrite\" url=\"/\" />\
+                </rule>\
+              </rules>\
+            </rewrite>\
+          </system.webServer>\
+        </configuration>" > dist/web.config
+
+    - name: Zip build folder
+      run: cd dist && zip -r ../build.zip ./*
 
     - name: 'Deploy to Azure WebApp'
-      uses: azure/static-web-apps-deploy@v1
+      uses: Azure/webapps-deploy@v1
       with:
-        azure_static_web_apps_api_token: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_PREPROD }}
-        repo_token: ${{ secrets.GITHUB_TOKEN }}
-        action: "upload"
-        app_location: "/"
-        output_location: "dist"
+        app-name: ${{ env.APP_NAME }}
+        package: build.zip
+        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_PREPROD }}
